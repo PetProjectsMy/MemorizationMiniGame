@@ -1,0 +1,26 @@
+.game__memorization-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+
+  width: var(--interactive-panel-size);
+  height: var(--interactive-panel-size);
+
+  background-color: black;
+  border-color: blue;
+  border-style: solid;
+  border-width: var(
+    --interactive-panel-border-width
+  );
+}
+
+.game__memorization-fragment {
+  opacity: 0;
+  background-color: black;
+  transition: 1000ms ease;
+}
+
+.game__memorization-fragment_active {
+  opacity: 1;
+  background-color: darkcyan;
+}
