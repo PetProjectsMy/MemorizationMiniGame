@@ -4,7 +4,6 @@ import {
   useEffect,
 } from "react";
 import MemorizationPanel from "./MemorizationPanel/MemorizationPanel";
-import { useMemorizationSequence } from "./useMemorizationSequence";
 import PickingPanel from "./PickingPanel/PickingPanel";
 import "./Game.css";
 import { MemorizationGameStateDispatcher } from "../store/store";
@@ -42,7 +41,13 @@ const Game: FC = () => {
         fragmentsToMemorize={memorizationSequence}
       />
       <PickingPanel
-        pickingSequence={memorizationSequence}
+        memorizationSequence={
+          memorizationSequence
+        }
+        isPickingBlocked={
+          gameStageType !==
+          GameStageType.REPRODUCTION
+        }
       />
     </div>
   );

@@ -13,19 +13,10 @@ import { ProgressbarIndicatorStatus } from "../../ProgressBar/ProgressBar";
 const PickingButton: FC<ComponentProps> = ({
   buttonIndex,
   pickingPanelContext,
-  disabled = false,
-  initPickStatus = PickStatus.NOT_PICKED,
 }) => {
   const [pickStatus, setPickStatus] = useState(
-    initPickStatus
+    PickStatus.NOT_PICKED
   );
-  const {
-    pickingSequence,
-    pickingIndexRef,
-    lastPickedFragmentRef,
-    resetPickedSequence,
-    expandProgressbar,
-  } = pickingPanelContext;
 
   useEffect(
     () =>
@@ -47,21 +38,31 @@ const PickingButton: FC<ComponentProps> = ({
     className,
   };
 
-  const fragmentToPick =
-    pickingSequence[pickingIndexRef.current];
   props.onClick = (event) => {
-    // TODO
-    if (!fragmentToPick) {
+    const { isPickingBlockedRef } =
+      pickingPanelContext;
+    if (
+      pickStatus === PickStatus.SUCCESS ||
+      isPickingBlockedRef.current
+    ) {
       return;
     }
 
-    if (pickStatus === PickStatus.SUCCESS) {
-      return;
-    }
+    const {
+      memorizationSequence,
+      currentPickIndexRef,
+      lastPickedFragmentIndexRef,
+      resetPickedSequence,
+      expandProgressbar,
+    } = pickingPanelContext;
 
-    lastPickedFragmentRef.current = buttonIndex;
+    lastPickedFragmentIndexRef.current =
+      buttonIndex;
     const isRightPick =
-      fragmentToPick === buttonIndex;
+      memorizationSequence[
+        currentPickIndexRef.current
+      ] === buttonIndex;
+
     if (isRightPick) {
       setPickStatus(PickStatus.SUCCESS);
       expandProgressbar(
@@ -76,12 +77,7 @@ const PickingButton: FC<ComponentProps> = ({
     }
   };
 
-  return (
-    <button
-      {...props}
-      disabled={disabled}
-    ></button>
-  );
+  return <button {...props}></button>;
 };
 
 export default PickingButton;

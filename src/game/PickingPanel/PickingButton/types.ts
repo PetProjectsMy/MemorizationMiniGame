@@ -8,8 +8,6 @@ export const enum PickStatus {
 
 export type ComponentProps = {
   buttonIndex: number;
-  initPickStatus?: PickStatus;
-  disabled?: boolean;
   pickingPanelContext: PickingPanelContext;
 };
 

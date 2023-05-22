@@ -2,7 +2,6 @@ import {
   type FC,
   useMemo,
   useState,
-  useRef,
   useEffect,
   useCallback,
 } from "react";
@@ -12,54 +11,41 @@ import ProgressBar, {
 import PickingButton from "./PickingButton/PickingButton";
 import type { PickingPanelContext } from "./types";
 import "./PickingPanel.css";
+import {
+  usePickStatus,
+  usePickingBlock,
+  usePickedSequenceResetting,
+  useProgressbar,
+} from "./hooks";
 
-type Props = { pickingSequence?: number[] };
+type Props = {
+  memorizationSequence?: number[];
+  isPickingBlocked: boolean;
+};
 
 const PickingPanel: FC<Props> = ({
-  pickingSequence = [],
+  memorizationSequence = [],
+  isPickingBlocked,
 }) => {
-  const [pickingIndex, setPickingIndex] =
-    useState<number>(0);
-  const [
-    progressbarIndicators,
-    setProgressbarIndicators,
-  ] = useState<ProgressbarIndicatorStatus[]>([]);
-  const [
-    isSequenceResetting,
-    setIsSequenceResetting,
-  ] = useState(false);
-
-  const pickingIndexRef = useRef<number>(0);
-  pickingIndexRef.current = pickingIndex;
-  const lastPickedFragmentRef = useRef<
-    number | null
-  >(null);
-
-  const resetPickedSequence = () => {
-    setIsSequenceResetting(true);
-  };
-
-  const pickingPanelContext: PickingPanelContext =
-    useMemo(
-      () => ({
-        resetPickedSequence,
-        pickingSequence,
-        pickingIndexRef,
-        lastPickedFragmentRef,
+  const pickingPanelContext = useMemo(
+    () =>
+      ({
+        memorizationSequence,
         resetPickButton: {},
-        expandProgressbar: (
-          indicatorStatus: ProgressbarIndicatorStatus
-        ) => {
-          setProgressbarIndicators(
-            (indicators) => [
-              ...indicators,
-              indicatorStatus,
-            ]
-          );
-        },
-      }),
-      []
-    );
+      } as PickingPanelContext),
+    []
+  );
+
+  usePickStatus({ pickingPanelContext });
+  usePickingBlock({
+    pickingPanelContext,
+    isPickingBlockedInitValue: isPickingBlocked,
+  });
+  usePickedSequenceResetting({
+    pickingPanelContext,
+  });
+  const { progressbarIndicators } =
+    useProgressbar({ pickingPanelContext });
 
   const pickingButtons = useMemo(
     () =>
@@ -69,67 +55,13 @@ const PickingPanel: FC<Props> = ({
         <PickingButton
           key={index}
           buttonIndex={index}
-          disabled={isSequenceResetting}
           pickingPanelContext={
             pickingPanelContext
           }
         />
       )),
-    [isSequenceResetting]
+    []
   );
-
-  const reset = useCallback(async () => {
-    const resetTimeout = 1000;
-
-    const sequenceToReset = pickingSequence.slice(
-      0,
-      pickingIndexRef.current
-    );
-    const lastPickedFragment =
-      lastPickedFragmentRef.current;
-    if (lastPickedFragment !== null) {
-      sequenceToReset.push(lastPickedFragment);
-    }
-
-    console.log(
-      `SEQUENCE TO RESET: ${JSON.stringify(
-        sequenceToReset
-      )}\nLAST PICKED: ${lastPickedFragment}`
-    );
-    const resetButtons = sequenceToReset.map(
-      (fragmentIndex) =>
-        new Promise<void>((resolve) => {
-          setTimeout(() => {
-            pickingPanelContext.resetPickButton[
-              fragmentIndex
-            ]?.();
-          }, resetTimeout);
-          resolve();
-        })
-    );
-    const resetProgressbar = new Promise<void>(
-      (resolve) => {
-        setTimeout(() => {
-          setProgressbarIndicators([]);
-          resolve();
-        }, resetTimeout);
-      }
-    );
-
-    await Promise.all([
-      ...resetButtons,
-      resetProgressbar,
-    ]);
-
-    setPickingIndex(0);
-    setIsSequenceResetting(false);
-  }, []);
-
-  useEffect(() => {
-    if (isSequenceResetting) {
-      reset();
-    }
-  }, [isSequenceResetting]);
 
   return (
     <div className="game__puzzle-panel">
