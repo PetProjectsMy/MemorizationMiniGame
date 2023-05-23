@@ -28,52 +28,92 @@ export function useFragmentsHighlighting({
   const { toggleFragmentHighlighting } =
     memorizationPanelContext;
 
+  type AbortSignalArg = { signal: AbortSignal };
   const createHighlightCompletionWaitingPromise =
     useCallback(
-      () =>
-        new Promise((resolve) =>
-          setTimeout(
-            resolve,
-            MEMORIZATION_FRAGMENT_HIGHLIGHTING_DURATION
-          )
+      (
+        timeout: number,
+        { signal }: AbortSignalArg
+      ) =>
+        new Promise<void>((resolve, reject) =>
+          setTimeout(() => {
+            if (signal.aborted) {
+              reject("ABORTED WITH SIGNAL");
+            }
+
+            resolve();
+          }, timeout)
         ),
       []
     );
 
   const highlightMemorizationFragment =
-    useCallback(async (fragmentIndex: number) => {
-      const toggleHighlighting =
-        toggleFragmentHighlighting[fragmentIndex];
+    useCallback(
+      async (
+        fragmentIndex: number,
+        { signal }: AbortSignalArg
+      ) => {
+        const highlightingDuration =
+          MEMORIZATION_FRAGMENT_HIGHLIGHTING_DURATION;
+        const highlightingDurationSlightlyReduced =
+          0.7 *
+          MEMORIZATION_FRAGMENT_HIGHLIGHTING_DURATION;
 
-      toggleHighlighting();
-      await createHighlightCompletionWaitingPromise();
-      toggleHighlighting();
-      await createHighlightCompletionWaitingPromise();
-    }, []);
+        const toggleHighlighting =
+          toggleFragmentHighlighting[
+            fragmentIndex
+          ];
+
+        toggleHighlighting();
+        await createHighlightCompletionWaitingPromise(
+          highlightingDuration,
+          { signal }
+        );
+        toggleHighlighting();
+        await createHighlightCompletionWaitingPromise(
+          highlightingDurationSlightlyReduced,
+          { signal }
+        );
+      },
+      []
+    );
 
   const highlightMemorizationSequence =
-    useCallback(async () => {
-      console.log(
-        `HIGHLIGHT SEQUENCE: ${JSON.stringify(
-          memorizationSequenceRef.current
-        )}`
-      );
+    useCallback(
+      async ({ signal }: AbortSignalArg) => {
+        try {
+          console.log(
+            `HIGHLIGHT SEQUENCE: ${JSON.stringify(
+              memorizationSequenceRef.current
+            )}`
+          );
 
-      for (const fragmentIndex of memorizationSequenceRef.current) {
-        await highlightMemorizationFragment(
-          fragmentIndex
-        );
-      }
+          for (const fragmentIndex of memorizationSequenceRef.current) {
+            await highlightMemorizationFragment(
+              fragmentIndex,
+              { signal }
+            );
+          }
 
-      console.log(`HIGHLIGHTING COMPLETED`);
-      switchStageType();
-    }, []);
+          console.log(`HIGHLIGHTING COMPLETED`);
+          switchStageType();
+        } catch (error) {
+          console.log(`ERROR: ${error}`);
+        }
+      },
+      []
+    );
 
   useEffect(() => {
     if (gameStage !== GameStage.MEMORIZATION) {
       return;
     }
 
-    highlightMemorizationSequence();
+    const controller = new AbortController();
+    highlightMemorizationSequence({
+      signal: controller.signal,
+    });
+
+    return () => controller.abort();
   }, [gameStage]);
 }

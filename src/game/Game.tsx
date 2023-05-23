@@ -7,26 +7,22 @@ import { useGameContext } from "./GameContext/useGameContext";
 import { GameStage } from "./GameContext/types";
 import "./Game.css";
 
+const GAME_MAX_LEVEL = 5;
+
 const Game: FC = () => {
   const gameStageContext = useGameContext();
   const {
     gameStatusRef,
     memorizationSequenceRef,
     expandMemorizationSequence,
-    switchStageType,
   } = gameStageContext;
+  const gameStatus = gameStatusRef.current;
 
   if (
-    gameStatusRef.current.stage ===
-    GameStage.MEMORIZATION
+    gameStatus.stage === GameStage.MEMORIZATION &&
+    !memorizationSequenceRef.current.length
   ) {
-    if (!memorizationSequenceRef.current.length) {
-      expandMemorizationSequence();
-    }
-
-    // if (gameStatusRef.current.level === 1) {
-    //   switchStageType();
-    // }
+    expandMemorizationSequence();
   }
 
   return (
@@ -34,8 +30,16 @@ const Game: FC = () => {
       value={gameStageContext}
     >
       <div className="game">
-        <MemorizationPanel />
-        <PickingPanel />
+        {gameStatus.level <= GAME_MAX_LEVEL ? (
+          <>
+            <MemorizationPanel />
+            <PickingPanel />
+          </>
+        ) : (
+          <div style={{ fontSize: "2rem" }}>
+            Мини Игра Пройдена!
+          </div>
+        )}
       </div>
     </GameContext.Provider>
   );

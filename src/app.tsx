@@ -5,4 +5,8 @@ import { Game } from "./game/Game";
 const root = document.getElementById(
   "root"
 ) as HTMLElement;
-ReactDOM.createRoot(root).render(<Game />);
+ReactDOM.createRoot(root).render(
+  <React.StrictMode>
+    <Game />
+  </React.StrictMode>
+);
