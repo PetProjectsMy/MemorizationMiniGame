@@ -1,6 +1,6 @@
 export const enum GameStage {
-  MEMORIZATION,
-  REPRODUCTION,
+  MEMORIZATION = "memorization",
+  REPRODUCTION = "reproduction",
 }
 
 export type GameStatus = {

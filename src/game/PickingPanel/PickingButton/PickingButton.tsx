@@ -2,14 +2,17 @@ import {
   useState,
   type FC,
   useEffect,
+  useContext,
 } from "react";
-import "./PickingButton.css";
 import {
   type NodeProps,
   PickStatus,
   type ComponentProps,
 } from "./types";
 import { ProgressbarIndicatorStatus } from "../../ProgressBar/ProgressBar";
+import "./PickingButton.css";
+import { GameContext } from "../../GameContext/context";
+
 const PickingButton: FC<ComponentProps> = ({
   buttonIndex,
   pickingPanelContext,
@@ -17,6 +20,8 @@ const PickingButton: FC<ComponentProps> = ({
   const [pickStatus, setPickStatus] = useState(
     PickStatus.NOT_PICKED
   );
+  const { memorizationSequenceRef } =
+    useContext(GameContext);
 
   useEffect(
     () =>
@@ -49,25 +54,36 @@ const PickingButton: FC<ComponentProps> = ({
     }
 
     const {
-      memorizationSequence,
       currentPickIndexRef,
-      lastPickedFragmentIndexRef,
+      lastPickStatusRef,
+      incrementCurrentPickIndex,
       resetPickedSequence,
       expandProgressbar,
     } = pickingPanelContext;
 
-    lastPickedFragmentIndexRef.current =
-      buttonIndex;
     const isRightPick =
-      memorizationSequence[
+      memorizationSequenceRef.current[
         currentPickIndexRef.current
       ] === buttonIndex;
+    lastPickStatusRef.current = {
+      isRightPick,
+      fragmentIndex: buttonIndex,
+    };
 
     if (isRightPick) {
       setPickStatus(PickStatus.SUCCESS);
       expandProgressbar(
         ProgressbarIndicatorStatus.SUCCESS
       );
+
+      if (
+        currentPickIndexRef.current + 1 ===
+        memorizationSequenceRef.current.length
+      ) {
+        resetPickedSequence();
+      } else {
+        incrementCurrentPickIndex();
+      }
     } else {
       setPickStatus(PickStatus.ERROR);
       expandProgressbar(

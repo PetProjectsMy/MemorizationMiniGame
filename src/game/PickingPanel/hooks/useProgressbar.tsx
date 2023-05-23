@@ -28,10 +28,10 @@ export function useProgressbar({
       ]);
     };
 
-    Object.assign(pickingPanelContext, {
-      resetProgressbar,
-      expandProgressbar,
-    });
+    pickingPanelContext.resetProgressbar =
+      resetProgressbar;
+    pickingPanelContext.expandProgressbar =
+      expandProgressbar;
   }, []);
 
   return {

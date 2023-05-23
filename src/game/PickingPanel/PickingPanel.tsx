@@ -1,32 +1,19 @@
-import {
-  type FC,
-  useMemo,
-  useContext,
-} from "react";
-import ProgressBar, {
-  ProgressbarIndicatorStatus,
-} from "../ProgressBar/ProgressBar";
+import { type FC, useMemo } from "react";
+import ProgressBar from "../ProgressBar/ProgressBar";
 import PickingButton from "./PickingButton/PickingButton";
 import type { PickingPanelContext } from "./types";
-import "./PickingPanel.css";
 import {
   usePickStatus,
   usePickingBlock,
   usePickedSequenceResetting,
   useProgressbar,
 } from "./hooks";
-import { GameContext } from "../GameContext/context";
+import "./PickingPanel.css";
 
 const PickingPanel: FC = () => {
-  const { memorizationSequenceRef } =
-    useContext(GameContext);
-  const memorizationSequence =
-    memorizationSequenceRef.current;
-
   const pickingPanelContext = useMemo(
     () =>
       ({
-        memorizationSequence,
         resetPickButton: {},
       } as PickingPanelContext),
     []

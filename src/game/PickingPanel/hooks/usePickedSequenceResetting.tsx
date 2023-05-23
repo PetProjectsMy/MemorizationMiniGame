@@ -1,11 +1,18 @@
 import {
   useCallback,
+  useContext,
   useEffect,
   useState,
 } from "react";
 import type { WithPickingPanelContextArgs } from "./types";
+import { GameContext } from "../../GameContext/context";
 
 const RESETTING_DURATION = 1000;
+
+export const enum ResettingType {
+  ON_ERROR,
+  ON_COMPLETION,
+}
 
 export function usePickedSequenceResetting({
   pickingPanelContext,
@@ -14,6 +21,7 @@ export function usePickedSequenceResetting({
     isPickedSequenceResetting,
     setIsPickedSequenceResetting,
   ] = useState(false);
+  const gameContext = useContext(GameContext);
 
   useEffect(() => {
     const resetPickedSequence = () => {
@@ -25,33 +33,29 @@ export function usePickedSequenceResetting({
       resetPickedSequence;
   }, []);
 
-  const resetPickingPanel =
-    useCallback(async () => {
+  const resetPickingPanel = useCallback(
+    async (resettingType: ResettingType) => {
       const {
-        memorizationSequence,
         currentPickIndexRef,
-        lastPickedFragmentIndexRef,
+        lastPickStatusRef,
         resetProgressbar,
         resetCurrentPickIndex,
         unblockPicking,
       } = pickingPanelContext;
 
       const sequenceToReset =
-        memorizationSequence.slice(
+        gameContext.memorizationSequenceRef.current.slice(
           0,
           currentPickIndexRef.current
         );
-      const lastPickedFragment =
-        lastPickedFragmentIndexRef.current;
-      if (lastPickedFragment !== null) {
-        sequenceToReset.push(lastPickedFragment);
+      const lastPickStatus =
+        lastPickStatusRef.current;
+      if (lastPickStatus !== null) {
+        sequenceToReset.push(
+          lastPickStatus.fragmentIndex
+        );
       }
 
-      console.log(
-        `SEQUENCE TO RESET: ${JSON.stringify(
-          sequenceToReset
-        )}\nLAST PICKED: ${lastPickedFragment}`
-      );
       const resetButtons = sequenceToReset.map(
         (fragmentIndex) =>
           new Promise<void>((resolve) => {
@@ -76,14 +80,47 @@ export function usePickedSequenceResetting({
         resetProgressbarPromise,
       ]);
 
-      resetCurrentPickIndex();
+      if (
+        resettingType === ResettingType.ON_ERROR
+      ) {
+        console.log(
+          `RESET ON ERROR: ${JSON.stringify(
+            sequenceToReset
+          )}`
+        );
+
+        setIsPickedSequenceResetting(false);
+      } else if (
+        resettingType ===
+        ResettingType.ON_COMPLETION
+      ) {
+        console.log(
+          `RESET ON COMPLETION: ${JSON.stringify(
+            sequenceToReset
+          )}`
+        );
+
+        gameContext.increaseStageLevel();
+        gameContext.switchStageType();
+      }
+
       unblockPicking();
-      setIsPickedSequenceResetting(false);
-    }, []);
+      resetCurrentPickIndex();
+    },
+    []
+  );
 
   useEffect(() => {
     if (isPickedSequenceResetting) {
-      resetPickingPanel();
+      const lastPickStatus =
+        pickingPanelContext.lastPickStatusRef
+          .current;
+
+      const resettingType =
+        lastPickStatus?.isRightPick
+          ? ResettingType.ON_COMPLETION
+          : ResettingType.ON_ERROR;
+      resetPickingPanel(resettingType);
     }
   }, [isPickedSequenceResetting]);
 

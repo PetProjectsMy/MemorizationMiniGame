@@ -17,11 +17,9 @@ const MemorizationPanel: FC = () => {
       memorizationSequence,
     });
 
-  const indicatorsStatuses = memorizationSequence
-    ? Array(memorizationSequence?.length).fill(
-        ProgressbarIndicatorStatus.SUCCESS
-      )
-    : [];
+  const indicatorsStatuses = Array(
+    memorizationSequence.length
+  ).fill(ProgressbarIndicatorStatus.SUCCESS);
 
   return (
     <div className="game__puzzle-panel">
@@ -35,4 +33,4 @@ const MemorizationPanel: FC = () => {
   );
 };
 
-export default memo(MemorizationPanel);
+export default MemorizationPanel;

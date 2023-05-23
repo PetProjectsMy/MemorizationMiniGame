@@ -1,13 +1,13 @@
 import { useEffect, useRef } from "react";
 import type { WithPickingPanelContextArgs } from "./types";
+import type { PickingPanelContext } from "../types";
 
 export function usePickStatus({
   pickingPanelContext,
 }: WithPickingPanelContextArgs) {
   const currentPickIndexRef = useRef<number>(0);
-  const lastPickedFragmentIndexRef = useRef<
-    number | null
-  >(null);
+  const lastPickStatusRef: PickingPanelContext["lastPickStatusRef"] =
+    useRef(null);
 
   useEffect(() => {
     const resetCurrentPickIndex = () => {
@@ -18,11 +18,13 @@ export function usePickStatus({
       currentPickIndexRef.current++;
     };
 
-    Object.assign(pickingPanelContext, {
-      resetCurrentPickIndex,
-      incrementCurrentPickIndex,
-      currentPickIndexRef,
-      lastPickedFragmentIndexRef,
-    });
+    pickingPanelContext.resetCurrentPickIndex =
+      resetCurrentPickIndex;
+    pickingPanelContext.incrementCurrentPickIndex =
+      incrementCurrentPickIndex;
+    pickingPanelContext.currentPickIndexRef =
+      currentPickIndexRef;
+    pickingPanelContext.lastPickStatusRef =
+      lastPickStatusRef;
   }, []);
 }

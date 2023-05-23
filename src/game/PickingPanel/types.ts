@@ -1,19 +1,18 @@
 import type { ProgressbarIndicatorStatus } from "../ProgressBar/ProgressBar";
-
 type Callback = () => void;
 
 export type PickingPanelContext = {
-  memorizationSequence: number[];
   isPickingBlockedRef: React.MutableRefObject<boolean>;
   blockPicking: Callback;
   unblockPicking: Callback;
 
   currentPickIndexRef: React.MutableRefObject<number>;
-  lastPickedFragmentIndexRef: React.MutableRefObject<
-    number | null
-  >;
   resetCurrentPickIndex: Callback;
   incrementCurrentPickIndex: Callback;
+  lastPickStatusRef: React.MutableRefObject<{
+    fragmentIndex: number;
+    isRightPick: boolean;
+  } | null>;
 
   resetPickedSequence: Callback;
   resetPickButton: Record<number, Callback>;

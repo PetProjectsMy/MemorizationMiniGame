@@ -12,6 +12,7 @@ const Game: FC = () => {
     gameStatusRef,
     memorizationSequenceRef,
     expandMemorizationSequence,
+    switchStageType,
   } = gameStageContext;
 
   if (
@@ -21,6 +22,10 @@ const Game: FC = () => {
     if (!memorizationSequenceRef.current.length) {
       expandMemorizationSequence();
     }
+
+    // if (gameStatusRef.current.level === 1) {
+    //   switchStageType();
+    // }
   }
 
   return (

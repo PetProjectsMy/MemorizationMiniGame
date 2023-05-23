@@ -23,14 +23,22 @@ export function useGameContext() {
 
   return useMemo(() => {
     const switchStageType = () => {
-      setGameStatus((currentStatus) => ({
-        ...currentStatus,
-        stage:
+      setGameStatus((currentStatus) => {
+        const nextStage =
           currentStatus.stage ===
           GameStage.MEMORIZATION
             ? GameStage.REPRODUCTION
-            : GameStage.MEMORIZATION,
-      }));
+            : GameStage.MEMORIZATION;
+
+        console.log(
+          `SWITCH STAGE: ${currentStatus.stage} -> ${nextStage}`
+        );
+
+        return {
+          ...currentStatus,
+          stage: nextStage,
+        };
+      });
     };
 
     const increaseStageLevel = () => {
