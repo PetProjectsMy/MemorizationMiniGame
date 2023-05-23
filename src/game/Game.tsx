@@ -1,55 +1,37 @@
-import {
-  type FC,
-  useState,
-  useEffect,
-} from "react";
+import { type FC } from "react";
 import MemorizationPanel from "./MemorizationPanel/MemorizationPanel";
 import PickingPanel from "./PickingPanel/PickingPanel";
+import { GameContext } from "./GameContext/context";
+import { useGameContext } from "./GameContext/useGameContext";
 import "./Game.css";
-import { MemorizationGameStateDispatcher } from "../store/store";
-import { useSelector } from "react-redux";
-import {
-  selectGameStage,
-  selectMemorizationSequence,
-} from "../store/selectors";
-import { GameStageType } from "../store/types";
+import { GameStage } from "./GameContext/types";
 
 const Game: FC = () => {
+  const gameStageContext = useGameContext();
   const {
-    type: gameStageType,
-    level: gameStageLevel,
-  } = useSelector(selectGameStage);
-  const memorizationSequence = useSelector(
-    selectMemorizationSequence
-  );
+    gameStatusRef,
+    memorizationSequenceRef,
+    expandMemorizationSequence,
+  } = gameStageContext;
 
   if (
-    gameStageType === GameStageType.MEMORIZATION
+    gameStatusRef.current.stage ===
+    GameStage.MEMORIZATION
   ) {
-    MemorizationGameStateDispatcher.expandMemorizationSequence();
-    MemorizationGameStateDispatcher.changeGameStage(
-      {
-        level: gameStageLevel,
-        type: GameStageType.REPRODUCTION,
-      }
-    );
+    if (!memorizationSequenceRef.current.length) {
+      expandMemorizationSequence();
+    }
   }
 
   return (
-    <div className="game">
-      <MemorizationPanel
-        fragmentsToMemorize={memorizationSequence}
-      />
-      <PickingPanel
-        memorizationSequence={
-          memorizationSequence
-        }
-        isPickingBlocked={
-          gameStageType !==
-          GameStageType.REPRODUCTION
-        }
-      />
-    </div>
+    <GameContext.Provider
+      value={gameStageContext}
+    >
+      <div className="game">
+        <MemorizationPanel />
+        <PickingPanel />
+      </div>
+    </GameContext.Provider>
   );
 };
 

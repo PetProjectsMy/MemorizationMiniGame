@@ -1,23 +1,24 @@
-import { FC, memo } from "react";
-import "./MemorizationPanel.css";
+import { FC, memo, useContext } from "react";
 import ProgressBar, {
   ProgressbarIndicatorStatus,
 } from "../ProgressBar/ProgressBar";
 import { useFragmentsHighlighting } from "./useFragmentsHighlighting";
+import { GameContext } from "../GameContext/context";
+import "./MemorizationPanel.css";
 
-type Props = {
-  fragmentsToMemorize: null | number[];
-};
+const MemorizationPanel: FC = () => {
+  const { memorizationSequenceRef } =
+    useContext(GameContext);
+  const memorizationSequence =
+    memorizationSequenceRef.current;
 
-const MemorizationPanel: FC<Props> = ({
-  fragmentsToMemorize,
-}) => {
   const { fragmentsGrid } =
     useFragmentsHighlighting({
-      fragmentsToMemorize,
+      memorizationSequence,
     });
-  const indicatorsStatuses = fragmentsToMemorize
-    ? Array(fragmentsToMemorize?.length).fill(
+
+  const indicatorsStatuses = memorizationSequence
+    ? Array(memorizationSequence?.length).fill(
         ProgressbarIndicatorStatus.SUCCESS
       )
     : [];

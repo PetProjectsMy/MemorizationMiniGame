@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { type FC, useMemo, memo } from "react";
+import { type FC, memo } from "react";
 import "./ProgressBar.css";
 
 export const enum ProgressbarIndicatorStatus {

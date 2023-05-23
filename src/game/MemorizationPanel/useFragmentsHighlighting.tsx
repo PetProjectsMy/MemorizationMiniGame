@@ -6,11 +6,11 @@ import {
 import { MemorizationFragment } from "./MemorizationFragment";
 
 type Args = {
-  fragmentsToMemorize: null | number[];
+  memorizationSequence: null | number[];
 };
 
 export function useFragmentsHighlighting({
-  fragmentsToMemorize,
+  memorizationSequence,
 }: Args) {
   const [
     currentFragmentIndex,
@@ -26,9 +26,9 @@ export function useFragmentsHighlighting({
   );
 
   let fragmentToMemorize: number | undefined;
-  if (fragmentsToMemorize) {
+  if (memorizationSequence) {
     fragmentToMemorize =
-      fragmentsToMemorize[currentFragmentIndex];
+      memorizationSequence[currentFragmentIndex];
 
     fragmentsGrid[fragmentToMemorize] =
       MemorizationFragment({

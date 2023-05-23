@@ -1,9 +1,7 @@
 import {
   type FC,
   useMemo,
-  useState,
-  useEffect,
-  useCallback,
+  useContext,
 } from "react";
 import ProgressBar, {
   ProgressbarIndicatorStatus,
@@ -17,16 +15,14 @@ import {
   usePickedSequenceResetting,
   useProgressbar,
 } from "./hooks";
+import { GameContext } from "../GameContext/context";
 
-type Props = {
-  memorizationSequence?: number[];
-  isPickingBlocked: boolean;
-};
+const PickingPanel: FC = () => {
+  const { memorizationSequenceRef } =
+    useContext(GameContext);
+  const memorizationSequence =
+    memorizationSequenceRef.current;
 
-const PickingPanel: FC<Props> = ({
-  memorizationSequence = [],
-  isPickingBlocked,
-}) => {
   const pickingPanelContext = useMemo(
     () =>
       ({
@@ -39,7 +35,6 @@ const PickingPanel: FC<Props> = ({
   usePickStatus({ pickingPanelContext });
   usePickingBlock({
     pickingPanelContext,
-    isPickingBlockedInitValue: isPickingBlocked,
   });
   usePickedSequenceResetting({
     pickingPanelContext,

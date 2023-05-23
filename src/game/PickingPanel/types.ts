@@ -4,7 +4,6 @@ type Callback = () => void;
 
 export type PickingPanelContext = {
   memorizationSequence: number[];
-
   isPickingBlockedRef: React.MutableRefObject<boolean>;
   blockPicking: Callback;
   unblockPicking: Callback;
