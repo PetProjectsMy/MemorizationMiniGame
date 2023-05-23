@@ -1,95 +1,79 @@
 import {
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-import { MemorizationFragment } from "./MemorizationFragment";
 import { GameContext } from "../GameContext/context";
+import { MemorizationPanelContext } from "./types";
+import { GameStage } from "../GameContext/types";
+import { MEMORIZATION_FRAGMENT_HIGHLIGHTING_DURATION } from "./constants";
 
 type Args = {
-  memorizationSequence: number[];
+  memorizationPanelContext: MemorizationPanelContext;
 };
 
 export function useFragmentsHighlighting({
-  memorizationSequence,
+  memorizationPanelContext,
 }: Args) {
-  const [
-    currentHighlightIndex,
-    setCurrentFragmentIndex,
-  ] = useState(0);
-  const [
-    isHighlightingCompleted,
-    setIsHighlightingCompleted,
-  ] = useState(false);
+  const {
+    gameStatusRef,
+    memorizationSequenceRef,
+    switchStageType,
+  } = useContext(GameContext);
+  const gameStage = gameStatusRef.current.stage;
 
-  const { gameStatusRef } =
-    useContext(GameContext);
-  const gameStatus = gameStatusRef.current;
+  const { toggleFragmentHighlighting } =
+    memorizationPanelContext;
 
-  if (isHighlightingCompleted) {
-    console.log("HIGHLIGHTING COMPLETED");
-  }
-
-  const fragmentsGrid = useMemo(
-    () =>
-      Array.from({ length: 9 }).map((_, index) =>
-        MemorizationFragment({ key: index })
-      ),
-    []
-  );
-
-  let fragmentToHighlightIndex:
-    | number
-    | undefined;
-  if (!isHighlightingCompleted) {
-    fragmentToHighlightIndex =
-      memorizationSequence[currentHighlightIndex];
-    fragmentsGrid[fragmentToHighlightIndex] =
-      MemorizationFragment({
-        isActive: true,
-        key: fragmentToHighlightIndex,
-      });
-
-    console.log(
-      `STAGE: ${gameStatus.stage},` +
-        ` LEVEL: ${gameStatus.level},` +
-        ` INDEX: ${currentHighlightIndex},` +
-        ` FRAGMENT: ${fragmentToHighlightIndex}` +
-        ` SEQUENCE: ${memorizationSequence}`
+  const createHighlightCompletionWaitingPromise =
+    useCallback(
+      () =>
+        new Promise((resolve) =>
+          setTimeout(
+            resolve,
+            MEMORIZATION_FRAGMENT_HIGHLIGHTING_DURATION
+          )
+        ),
+      []
     );
-  }
 
-  const levelAndCurrentHighlightIndex = `${gameStatus.level}${currentHighlightIndex}`;
+  const highlightMemorizationFragment =
+    useCallback(async (fragmentIndex: number) => {
+      const toggleHighlighting =
+        toggleFragmentHighlighting[fragmentIndex];
+
+      toggleHighlighting();
+      await createHighlightCompletionWaitingPromise();
+      toggleHighlighting();
+      await createHighlightCompletionWaitingPromise();
+    }, []);
+
+  const highlightMemorizationSequence =
+    useCallback(async () => {
+      console.log(
+        `HIGHLIGHT SEQUENCE: ${JSON.stringify(
+          memorizationSequenceRef.current
+        )}`
+      );
+
+      for (const fragmentIndex of memorizationSequenceRef.current) {
+        await highlightMemorizationFragment(
+          fragmentIndex
+        );
+      }
+
+      console.log(`HIGHLIGHTING COMPLETED`);
+      switchStageType();
+    }, []);
+
   useEffect(() => {
-    if (
-      typeof fragmentToHighlightIndex !== "number"
-    ) {
+    if (gameStage !== GameStage.MEMORIZATION) {
       return;
     }
 
-    let nextHighLightIndex =
-      currentHighlightIndex + 1;
-    if (
-      nextHighLightIndex ===
-      memorizationSequence.length
-    ) {
-      nextHighLightIndex = 0;
-    }
-
-    setTimeout(() => {
-      fragmentsGrid[fragmentToHighlightIndex!] =
-        MemorizationFragment({
-          isActive: false,
-          key: fragmentToHighlightIndex!,
-        });
-      setCurrentFragmentIndex(nextHighLightIndex);
-      if (nextHighLightIndex === 0) {
-        setIsHighlightingCompleted(true);
-      }
-    }, 1000);
-  }, [levelAndCurrentHighlightIndex]);
-
-  return { fragmentsGrid };
+    highlightMemorizationSequence();
+  }, [gameStage]);
 }

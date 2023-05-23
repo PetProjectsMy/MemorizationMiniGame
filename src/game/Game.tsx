@@ -3,8 +3,9 @@ import MemorizationPanel from "./MemorizationPanel/MemorizationPanel";
 import PickingPanel from "./PickingPanel/PickingPanel";
 import { GameContext } from "./GameContext/context";
 import { useGameContext } from "./GameContext/useGameContext";
-import "./Game.css";
+
 import { GameStage } from "./GameContext/types";
+import "./Game.css";
 
 const Game: FC = () => {
   const gameStageContext = useGameContext();

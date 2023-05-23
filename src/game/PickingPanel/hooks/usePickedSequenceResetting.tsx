@@ -88,8 +88,6 @@ export function usePickedSequenceResetting({
             sequenceToReset
           )}`
         );
-
-        setIsPickedSequenceResetting(false);
       } else if (
         resettingType ===
         ResettingType.ON_COMPLETION
@@ -104,6 +102,7 @@ export function usePickedSequenceResetting({
         gameContext.switchStageType();
       }
 
+      setIsPickedSequenceResetting(false);
       unblockPicking();
       resetCurrentPickIndex();
     },
@@ -123,8 +122,4 @@ export function usePickedSequenceResetting({
       resetPickingPanel(resettingType);
     }
   }, [isPickedSequenceResetting]);
-
-  return {
-    isPickedSequenceResetting,
-  };
 }

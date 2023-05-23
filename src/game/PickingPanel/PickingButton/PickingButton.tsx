@@ -60,9 +60,11 @@ const PickingButton: FC<ComponentProps> = ({
       resetPickedSequence,
       expandProgressbar,
     } = pickingPanelContext;
+    const memorizationSequence =
+      memorizationSequenceRef.current;
 
     const isRightPick =
-      memorizationSequenceRef.current[
+      memorizationSequence[
         currentPickIndexRef.current
       ] === buttonIndex;
     lastPickStatusRef.current = {
@@ -78,7 +80,7 @@ const PickingButton: FC<ComponentProps> = ({
 
       if (
         currentPickIndexRef.current + 1 ===
-        memorizationSequenceRef.current.length
+        memorizationSequence.length
       ) {
         resetPickedSequence();
       } else {

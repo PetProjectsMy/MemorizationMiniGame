@@ -12,10 +12,10 @@ export function usePickingBlock({
 }: WithPickingPanelContextArgs) {
   const { gameStatusRef } =
     useContext(GameContext);
+  const gameStage = gameStatusRef.current.stage;
 
   const isPickingBlockedRef = useRef<boolean>(
-    gameStatusRef.current.stage !==
-      GameStage.REPRODUCTION
+    gameStage !== GameStage.REPRODUCTION
   );
 
   useEffect(() => {
@@ -34,4 +34,9 @@ export function usePickingBlock({
     pickingPanelContext.unblockPicking =
       unblockPicking;
   }, []);
+
+  useEffect(() => {
+    isPickingBlockedRef.current =
+      gameStage !== GameStage.REPRODUCTION;
+  }, [gameStage]);
 }

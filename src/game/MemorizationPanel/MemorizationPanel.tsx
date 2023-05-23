@@ -1,9 +1,11 @@
-import { FC, memo, useContext } from "react";
+import { FC, useContext, useMemo } from "react";
 import ProgressBar, {
   ProgressbarIndicatorStatus,
 } from "../ProgressBar/ProgressBar";
 import { useFragmentsHighlighting } from "./useFragmentsHighlighting";
 import { GameContext } from "../GameContext/context";
+import { MemorizationFragment } from "./MemorizationFragment/MemorizationFragment";
+import { MemorizationPanelContext } from "./types";
 import "./MemorizationPanel.css";
 
 const MemorizationPanel: FC = () => {
@@ -12,14 +14,37 @@ const MemorizationPanel: FC = () => {
   const memorizationSequence =
     memorizationSequenceRef.current;
 
-  const { fragmentsGrid } =
-    useFragmentsHighlighting({
-      memorizationSequence,
-    });
+  const memorizationPanelContext: MemorizationPanelContext =
+    useMemo(
+      () => ({
+        toggleFragmentHighlighting: {},
+      }),
+      []
+    );
 
-  const indicatorsStatuses = Array(
+  const memorizationFragmentsGrid = useMemo(
+    () =>
+      Array.from({ length: 9 }).map(
+        (_, index) => (
+          <MemorizationFragment
+            key={index}
+            fragmentIndex={index}
+            memorizationPanelContext={
+              memorizationPanelContext
+            }
+          />
+        )
+      ),
+    []
+  );
+
+  let indicatorsStatuses = Array(
     memorizationSequence.length
   ).fill(ProgressbarIndicatorStatus.SUCCESS);
+
+  useFragmentsHighlighting({
+    memorizationPanelContext,
+  });
 
   return (
     <div className="game__puzzle-panel">
@@ -27,7 +52,7 @@ const MemorizationPanel: FC = () => {
         indicatorsStatuses={indicatorsStatuses}
       />
       <div className="game__memorization-panel">
-        {fragmentsGrid}
+        {memorizationFragmentsGrid}
       </div>
     </div>
   );

@@ -13,14 +13,3 @@
     --interactive-panel-border-width
   );
 }
-
-.game__memorization-fragment {
-  opacity: 0;
-  background-color: black;
-  transition: 1000ms ease;
-}
-
-.game__memorization-fragment_active {
-  opacity: 1;
-  background-color: darkcyan;
-}
