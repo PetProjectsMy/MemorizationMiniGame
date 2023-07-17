@@ -28,8 +28,8 @@
   "name": "landing-page",
   "private": true,
   "scripts": {
-    "build": "tsc && vite --force build",
-    "dev": "vite --force",
+    "build": "tsc && vite build",
+    "dev": "vite",
     "preview": "vite preview",
     "lint:styles": "stylelint --ignore-path='./configs/stylelint/.stylelintignore' --config='./configs/stylelint/stylelint.config.cjs' --fix ."
   },
