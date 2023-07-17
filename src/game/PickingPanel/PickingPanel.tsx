@@ -1,22 +1,22 @@
-import { type FC, useMemo } from "react";
-import ProgressBar from "../ProgressBar/ProgressBar";
-import PickingButton from "./PickingButton/PickingButton";
-import type { PickingPanelContext } from "./types";
+import { type FC, useMemo } from 'react';
+import ProgressBar from '../ProgressBar/ProgressBar';
+import PickingButton from './PickingButton/PickingButton';
+import type { PickingPanelContext } from './types';
 import {
   usePickStatus,
   usePickingBlock,
   usePickedSequenceResetting,
   useProgressbar,
-} from "./hooks";
-import "./PickingPanel.css";
+} from './hooks';
+import './PickingPanel.css';
 
 const PickingPanel: FC = () => {
   const pickingPanelContext = useMemo(
     () =>
       ({
         resetPickButton: {},
-      } as PickingPanelContext),
-    []
+      }) as PickingPanelContext,
+    [],
   );
 
   usePickStatus({ pickingPanelContext });
@@ -26,8 +26,7 @@ const PickingPanel: FC = () => {
   usePickedSequenceResetting({
     pickingPanelContext,
   });
-  const { progressbarIndicators } =
-    useProgressbar({ pickingPanelContext });
+  const { progressbarIndicators } = useProgressbar({ pickingPanelContext });
 
   const pickingButtons = useMemo(
     () =>
@@ -37,22 +36,16 @@ const PickingPanel: FC = () => {
         <PickingButton
           key={index}
           buttonIndex={index}
-          pickingPanelContext={
-            pickingPanelContext
-          }
+          pickingPanelContext={pickingPanelContext}
         />
       )),
-    []
+    [],
   );
 
   return (
     <div className="game__puzzle-panel">
-      <ProgressBar
-        indicatorsStatuses={progressbarIndicators}
-      />
-      <div className="game__picking-panel">
-        {pickingButtons}
-      </div>
+      <ProgressBar indicatorsStatuses={progressbarIndicators} />
+      <div className="game__picking-panel">{pickingButtons}</div>
     </div>
   );
 };

@@ -5,13 +5,7 @@ module.exports = {
     'at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: [
-          'define-placeholder',
-          'extend',
-          'define-mixin',
-          'mixin',
-          'for',
-        ],
+        ignoreAtRules: ['define-placeholder', 'extend', 'define-mixin', 'mixin', 'for'],
       },
     ],
     'function-no-unknown': [

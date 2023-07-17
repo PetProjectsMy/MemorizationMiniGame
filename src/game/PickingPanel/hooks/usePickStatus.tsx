@@ -1,13 +1,10 @@
-import { useEffect, useRef } from "react";
-import type { WithPickingPanelContextArgs } from "./types";
-import type { PickingPanelContext } from "../types";
+import { useEffect, useRef } from 'react';
+import type { WithPickingPanelContextArgs } from './types';
+import type { PickingPanelContext } from '../types';
 
-export function usePickStatus({
-  pickingPanelContext,
-}: WithPickingPanelContextArgs) {
+export function usePickStatus({ pickingPanelContext }: WithPickingPanelContextArgs) {
   const currentPickIndexRef = useRef<number>(0);
-  const lastPickStatusRef: PickingPanelContext["lastPickStatusRef"] =
-    useRef(null);
+  const lastPickStatusRef: PickingPanelContext['lastPickStatusRef'] = useRef(null);
 
   useEffect(() => {
     const resetCurrentPickIndex = () => {
@@ -18,13 +15,9 @@ export function usePickStatus({
       currentPickIndexRef.current++;
     };
 
-    pickingPanelContext.resetCurrentPickIndex =
-      resetCurrentPickIndex;
-    pickingPanelContext.incrementCurrentPickIndex =
-      incrementCurrentPickIndex;
-    pickingPanelContext.currentPickIndexRef =
-      currentPickIndexRef;
-    pickingPanelContext.lastPickStatusRef =
-      lastPickStatusRef;
+    pickingPanelContext.resetCurrentPickIndex = resetCurrentPickIndex;
+    pickingPanelContext.incrementCurrentPickIndex = incrementCurrentPickIndex;
+    pickingPanelContext.currentPickIndexRef = currentPickIndexRef;
+    pickingPanelContext.lastPickStatusRef = lastPickStatusRef;
   }, []);
 }

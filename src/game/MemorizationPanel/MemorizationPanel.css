@@ -9,7 +9,5 @@
   background-color: black;
   border-color: blue;
   border-style: solid;
-  border-width: var(
-    --interactive-panel-border-width
-  );
+  border-width: var(--interactive-panel-border-width);
 }

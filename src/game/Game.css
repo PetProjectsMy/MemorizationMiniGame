@@ -29,16 +29,9 @@ body {
 }
 
 .game__puzzle-panel {
-  --puzzle-panel-size: calc(
-    0.45 *
-      min(var(--max-height), var(--max-width))
-  );
-  --interactive-panel-size: calc(
-    0.85 * var(--puzzle-panel-size)
-  );
-  --interactive-panel-border-width: calc(
-    0.01 * var(--interactive-panel-size)
-  );
+  --puzzle-panel-size: calc(0.45 * min(var(--max-height), var(--max-width)));
+  --interactive-panel-size: calc(0.85 * var(--puzzle-panel-size));
+  --interactive-panel-border-width: calc(0.01 * var(--interactive-panel-size));
 
   display: flex;
   flex-direction: column;

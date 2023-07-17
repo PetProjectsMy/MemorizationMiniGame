@@ -1,7 +1,5 @@
-import type { PickingPanelContext } from "../types";
+import type { PickingPanelContext } from '../types';
 
-export type WithPickingPanelContextArgs<
-  Args = {}
-> = {
+export type WithPickingPanelContextArgs<Args = {}> = {
   pickingPanelContext: PickingPanelContext;
 } & Args;

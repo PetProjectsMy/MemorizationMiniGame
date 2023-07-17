@@ -1,7 +1,5 @@
 .game__picking-panel {
-  --grid-gap: var(
-    --interactive-panel-border-width
-  );
+  --grid-gap: var(--interactive-panel-border-width);
 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

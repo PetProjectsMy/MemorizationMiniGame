@@ -1,10 +1,10 @@
-import react from "@vitejs/plugin-react-swc";
-import { defineConfig } from "vite";
+import react from '@vitejs/plugin-react-swc';
+import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "",
+  base: '',
   build: {
     cssMinify: false,
     rollupOptions: {
@@ -15,7 +15,7 @@ export default defineConfig({
     },
   },
   css: {
-    postcss: "configs/postcss",
+    postcss: 'configs/postcss',
     devSourcemap: true,
   },
   server: {

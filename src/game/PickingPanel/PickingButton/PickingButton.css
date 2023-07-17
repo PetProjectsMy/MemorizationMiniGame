@@ -2,9 +2,7 @@
   background-color: rgb(119, 95, 59);
   border-color: aqua;
   border-style: solid;
-  border-width: var(
-    --interactive-panel-border-width
-  );
+  border-width: var(--interactive-panel-border-width);
   border-radius: 7%;
 
   transition: 500ms;
