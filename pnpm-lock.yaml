@@ -64,9 +64,9 @@ devDependencies:
   stylelint-config-clean-order:
     specifier: ^5.0.0
     version: 5.0.0(stylelint@15.3.0)
-  stylelint-config-standard:
-    specifier: ^31.0.0
-    version: 31.0.0(stylelint@15.3.0)
+  stylelint-config-recommended:
+    specifier: ^13.0.0
+    version: 13.0.0(stylelint@15.3.0)
   stylelint-order:
     specifier: ^6.0.3
     version: 6.0.3(stylelint@15.3.0)
@@ -2908,21 +2908,13 @@ packages:
       stylelint-order: 6.0.3(stylelint@15.3.0)
     dev: true
 
-  /stylelint-config-recommended@11.0.0(stylelint@15.3.0):
-    resolution: {integrity: sha512-SoGIHNI748OCZn6BxFYT83ytWoYETCINVHV3LKScVAWQQauWdvmdDqJC5YXWjpBbxg2E761Tg5aUGKLFOVhEkA==}
+  /stylelint-config-recommended@13.0.0(stylelint@15.3.0):
+    resolution: {integrity: sha512-EH+yRj6h3GAe/fRiyaoO2F9l9Tgg50AOFhaszyfov9v6ayXJ1IkSHwTxd7lB48FmOeSGDPLjatjO11fJpmarkQ==}
+    engines: {node: ^14.13.1 || >=16.0.0}
     peerDependencies:
-      stylelint: ^15.3.0
+      stylelint: ^15.10.0
     dependencies:
       stylelint: 15.3.0
-    dev: true
-
-  /stylelint-config-standard@31.0.0(stylelint@15.3.0):
-    resolution: {integrity: sha512-CUGAmtROCvX0YgMY2+6P9tqSkHj5z/75XxrQ8bGxvkCa1xYdGDx4poM0pa7cXc3s74/PZLJH/okxZZouRfOSGw==}
-    peerDependencies:
-      stylelint: ^15.3.0
-    dependencies:
-      stylelint: 15.3.0
-      stylelint-config-recommended: 11.0.0(stylelint@15.3.0)
     dev: true
 
   /stylelint-order@6.0.3(stylelint@15.3.0):

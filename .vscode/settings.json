@@ -1,0 +1,6 @@
+{
+  "prettier.configPath": "configs/prettier/.prettierrc",
+  "prettier.ignorePath": "configs/prettier/.prettierignore",
+  "stylelint.configFile": "configs/stylelint/stylelint.config.cjs",
+  "stylelint.validate": ["css", "scss", "less", "postcss"]
+}
