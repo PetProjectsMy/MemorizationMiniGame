@@ -1,7 +1,7 @@
 import classNames from 'classnames';
-import { useState, type FC, useEffect } from 'react';
-import { MemorizationPanelContext } from '../types';
+import { useMemo, useState, type FC } from 'react';
 import { MEMORIZATION_FRAGMENT_HIGHLIGHTING_DURATION } from '../constants';
+import { MemorizationPanelContext } from '../types';
 import './MemorizationFragment.css';
 
 type Props = {
@@ -15,14 +15,16 @@ export const MemorizationFragment: FC<Props> = ({
 }) => {
   const [isHighlighted, setIsHighLighted] = useState(false);
 
-  useEffect(() => {
-    const toggleFragmentHighlighting = () => {
+  useMemo(() => {
+    const toggleFragmentHighlighting = (isHighlighted?: boolean) => {
       setIsHighLighted(currentValue => {
+        const nextValue = isHighlighted !== undefined ? isHighlighted : !currentValue;
+
         console.log(
-          `TOGGLE FRAGMENT-${fragmentIndex} HIGHLIGHT : ${currentValue}->${!currentValue}`,
+          `TOGGLE FRAGMENT-${fragmentIndex} HIGHLIGHT : ${currentValue}->${nextValue}`,
         );
 
-        return !currentValue;
+        return nextValue;
       });
     };
 
@@ -32,8 +34,9 @@ export const MemorizationFragment: FC<Props> = ({
 
   return (
     <div
-      className={classNames('game__memorization-fragment', {
-        'game__memorization-fragment_highlighted': isHighlighted,
+      className={classNames('square-fragments-memorization-game__memorization-fragment', {
+        'square-fragments-memorization-game__memorization-fragment_highlighted':
+          isHighlighted,
       })}
       style={{
         transition: `${MEMORIZATION_FRAGMENT_HIGHLIGHTING_DURATION}ms`,

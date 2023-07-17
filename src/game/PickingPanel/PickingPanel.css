@@ -1,4 +1,4 @@
-.game__picking-panel {
+.square-fragments-memorization-game__picking-panel {
   --grid-gap: var(--interactive-panel-border-width);
 
   display: grid;

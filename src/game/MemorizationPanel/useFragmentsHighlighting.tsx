@@ -1,8 +1,8 @@
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { GameContext } from '../GameContext/context';
-import { MemorizationPanelContext } from './types';
 import { GameStage } from '../GameContext/types';
 import { MEMORIZATION_FRAGMENT_HIGHLIGHTING_DURATION } from './constants';
+import { MemorizationPanelContext } from './types';
 
 type Args = {
   memorizationPanelContext: MemorizationPanelContext;
@@ -38,8 +38,13 @@ export function useFragmentsHighlighting({ memorizationPanelContext }: Args) {
 
       const toggleHighlighting = toggleFragmentHighlighting[fragmentIndex];
 
+      console.log(`FRAGMENT-${fragmentIndex} LIGHT ON`);
       toggleHighlighting();
-      await createHighlightCompletionWaitingPromise(highlightingDuration, { signal });
+      await createHighlightCompletionWaitingPromise(highlightingDuration, {
+        signal,
+      });
+
+      console.log(`FRAGMENT-${fragmentIndex} LIGHT OFF`);
       toggleHighlighting();
       await createHighlightCompletionWaitingPromise(highlightingDurationSlightlyReduced, {
         signal,
@@ -58,12 +63,16 @@ export function useFragmentsHighlighting({ memorizationPanelContext }: Args) {
         for (const fragmentIndex of memorizationSequenceRef.current) {
           await highlightMemorizationFragment(fragmentIndex, { signal });
         }
-
-        console.log(`HIGHLIGHTING COMPLETED`);
-        switchStageType();
       } catch (error) {
         console.log(`ERROR: ${error}`);
+
+        for (const fragmentIndex of memorizationSequenceRef.current) {
+          toggleFragmentHighlighting[fragmentIndex](false);
+        }
       }
+
+      console.log(`HIGHLIGHTING COMPLETED`);
+      switchStageType();
     },
     [],
   );

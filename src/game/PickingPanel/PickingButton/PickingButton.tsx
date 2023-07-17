@@ -1,32 +1,35 @@
-import { useState, type FC, useEffect, useContext } from 'react';
+import { useState, type FC, useContext, useMemo } from 'react';
 import { type NodeProps, PickStatus, type ComponentProps } from './types';
 import { ProgressbarIndicatorStatus } from '../../ProgressBar/ProgressBar';
 import './PickingButton.css';
 import { GameContext } from '../../GameContext/context';
 
-const PickingButton: FC<ComponentProps> = ({ buttonIndex, pickingPanelContext }) => {
+const PickingButton: FC<ComponentProps> = ({
+  buttonIndex,
+  pickingPanelContext,
+}) => {
   const [pickStatus, setPickStatus] = useState(PickStatus.NOT_PICKED);
   const { memorizationSequenceRef } = useContext(GameContext);
 
-  useEffect(
+  useMemo(
     () =>
       (pickingPanelContext.resetPickButton[buttonIndex] = () =>
         setPickStatus(PickStatus.NOT_PICKED)),
-    [],
+    []
   );
 
-  let className = 'game__picking-button';
+  let className = 'square-fragments-memorization-game__picking-button';
   if (pickStatus === PickStatus.SUCCESS) {
-    className += ' game__picking-button_success';
+    className += ' square-fragments-memorization-game__picking-button_success';
   } else if (pickStatus === PickStatus.ERROR) {
-    className += ' game__picking-button_error';
+    className += ' square-fragments-memorization-game__picking-button_error';
   }
 
   const props: NodeProps = {
     className,
   };
 
-  props.onClick = event => {
+  props.onClick = () => {
     const { isPickingBlockedRef } = pickingPanelContext;
     if (pickStatus === PickStatus.SUCCESS || isPickingBlockedRef.current) {
       return;
@@ -41,7 +44,8 @@ const PickingButton: FC<ComponentProps> = ({ buttonIndex, pickingPanelContext })
     } = pickingPanelContext;
     const memorizationSequence = memorizationSequenceRef.current;
 
-    const isRightPick = memorizationSequence[currentPickIndexRef.current] === buttonIndex;
+    const isRightPick =
+      memorizationSequence[currentPickIndexRef.current] === buttonIndex;
     lastPickStatusRef.current = {
       isRightPick,
       fragmentIndex: buttonIndex,

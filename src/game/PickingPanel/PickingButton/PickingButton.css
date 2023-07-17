@@ -1,17 +1,18 @@
-.game__picking-button {
+.square-fragments-memorization-game__picking-button {
   background-color: rgb(119, 95, 59);
   border-color: aqua;
   border-style: solid;
   border-width: var(--interactive-panel-border-width);
   border-radius: 7%;
+  cursor: pointer;
 
   transition: 500ms;
 }
 
-.game__picking-button_success {
+.square-fragments-memorization-game__picking-button_success {
   background-color: green;
 }
 
-.game__picking-button_error {
+.square-fragments-memorization-game__picking-button_error {
   background-color: red;
 }

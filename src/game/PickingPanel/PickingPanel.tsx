@@ -15,8 +15,8 @@ const PickingPanel: FC = () => {
     () =>
       ({
         resetPickButton: {},
-      }) as PickingPanelContext,
-    [],
+      } as PickingPanelContext),
+    []
   );
 
   usePickStatus({ pickingPanelContext });
@@ -39,13 +39,15 @@ const PickingPanel: FC = () => {
           pickingPanelContext={pickingPanelContext}
         />
       )),
-    [],
+    []
   );
 
   return (
-    <div className="game__puzzle-panel">
+    <div className="square-fragments-memorization-game__puzzle-panel">
       <ProgressBar indicatorsStatuses={progressbarIndicators} />
-      <div className="game__picking-panel">{pickingButtons}</div>
+      <div className="square-fragments-memorization-game__picking-panel">
+        {pickingButtons}
+      </div>
     </div>
   );
 };

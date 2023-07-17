@@ -11,9 +11,12 @@ const mapProgressbarIndicatorStatusToClassName: Record<
   ProgressbarIndicatorStatus,
   string
 > = {
-  [ProgressbarIndicatorStatus.SUCCESS]: 'game__progressbar-indicator_success',
-  [ProgressbarIndicatorStatus.ERROR]: 'game__progressbar-indicator_error',
-  [ProgressbarIndicatorStatus.NEUTRAL]: 'game__progressbar-indicator_neutral',
+  [ProgressbarIndicatorStatus.SUCCESS]:
+    'square-fragments-memorization-game__progressbar-indicator_success',
+  [ProgressbarIndicatorStatus.ERROR]:
+    'square-fragments-memorization-game__progressbar-indicator_error',
+  [ProgressbarIndicatorStatus.NEUTRAL]:
+    'square-fragments-memorization-game__progressbar-indicator_neutral',
 };
 
 type Props = {
@@ -30,15 +33,18 @@ const ProgressBar: FC<Props> = ({ indicatorsStatuses = [] }) => {
     return (
       <div
         className={classNames(
-          'game__progressbar-indicator',
-          mapProgressbarIndicatorStatusToClassName[indicatorStatus],
+          'square-fragments-memorization-game__progressbar-indicator',
+          mapProgressbarIndicatorStatusToClassName[indicatorStatus]
         )}
-        key={index}
-      ></div>
+        key={index}></div>
     );
   });
 
-  return <div className="game__progressbar">{progressbarIndicators}</div>;
+  return (
+    <div className="square-fragments-memorization-game__progressbar">
+      {progressbarIndicators}
+    </div>
+  );
 };
 
 export default memo(ProgressBar);

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { WithPickingPanelContextArgs } from './types';
 import { GameContext } from '../../GameContext/context';
 
@@ -12,10 +12,11 @@ export const enum ResettingType {
 export function usePickedSequenceResetting({
   pickingPanelContext,
 }: WithPickingPanelContextArgs) {
-  const [isPickedSequenceResetting, setIsPickedSequenceResetting] = useState(false);
+  const [isPickedSequenceResetting, setIsPickedSequenceResetting] =
+    useState(false);
   const gameContext = useContext(GameContext);
 
-  useEffect(() => {
+  useMemo(() => {
     const resetPickedSequence = () => {
       pickingPanelContext.blockPicking();
       setIsPickedSequenceResetting(true);
@@ -24,55 +25,58 @@ export function usePickedSequenceResetting({
     pickingPanelContext.resetPickedSequence = resetPickedSequence;
   }, []);
 
-  const resetPickingPanel = useCallback(async (resettingType: ResettingType) => {
-    const {
-      currentPickIndexRef,
-      lastPickStatusRef,
-      resetProgressbar,
-      resetCurrentPickIndex,
-      unblockPicking,
-    } = pickingPanelContext;
+  const resetPickingPanel = useCallback(
+    async (resettingType: ResettingType) => {
+      const {
+        currentPickIndexRef,
+        lastPickStatusRef,
+        resetProgressbar,
+        resetCurrentPickIndex,
+        unblockPicking,
+      } = pickingPanelContext;
 
-    const sequenceToReset = gameContext.memorizationSequenceRef.current.slice(
-      0,
-      currentPickIndexRef.current,
-    );
-    const lastPickStatus = lastPickStatusRef.current;
-    if (lastPickStatus !== null) {
-      sequenceToReset.push(lastPickStatus.fragmentIndex);
-    }
+      const sequenceToReset = gameContext.memorizationSequenceRef.current.slice(
+        0,
+        currentPickIndexRef.current
+      );
+      const lastPickStatus = lastPickStatusRef.current;
+      if (lastPickStatus !== null) {
+        sequenceToReset.push(lastPickStatus.fragmentIndex);
+      }
 
-    const resetButtons = sequenceToReset.map(
-      fragmentIndex =>
-        new Promise<void>(resolve => {
-          setTimeout(() => {
-            pickingPanelContext.resetPickButton[fragmentIndex]?.();
-          }, RESETTING_DURATION);
+      const resetButtons = sequenceToReset.map(
+        fragmentIndex =>
+          new Promise<void>(resolve => {
+            setTimeout(() => {
+              pickingPanelContext.resetPickButton[fragmentIndex]?.();
+            }, RESETTING_DURATION);
+            resolve();
+          })
+      );
+      const resetProgressbarPromise = new Promise<void>(resolve => {
+        setTimeout(() => {
+          resetProgressbar();
           resolve();
-        }),
-    );
-    const resetProgressbarPromise = new Promise<void>(resolve => {
-      setTimeout(() => {
-        resetProgressbar();
-        resolve();
-      }, RESETTING_DURATION);
-    });
+        }, RESETTING_DURATION);
+      });
 
-    await Promise.all([...resetButtons, resetProgressbarPromise]);
+      await Promise.all([...resetButtons, resetProgressbarPromise]);
 
-    if (resettingType === ResettingType.ON_ERROR) {
-      console.log(`RESET ON ERROR: ${JSON.stringify(sequenceToReset)}`);
-    } else if (resettingType === ResettingType.ON_COMPLETION) {
-      console.log(`RESET ON COMPLETION: ${JSON.stringify(sequenceToReset)}`);
+      if (resettingType === ResettingType.ON_ERROR) {
+        console.log(`RESET ON ERROR: ${JSON.stringify(sequenceToReset)}`);
+      } else if (resettingType === ResettingType.ON_COMPLETION) {
+        console.log(`RESET ON COMPLETION: ${JSON.stringify(sequenceToReset)}`);
 
-      gameContext.increaseStageLevel();
-      gameContext.switchStageType();
-    }
+        gameContext.increaseStageLevel();
+        gameContext.switchStageType();
+      }
 
-    setIsPickedSequenceResetting(false);
-    unblockPicking();
-    resetCurrentPickIndex();
-  }, []);
+      setIsPickedSequenceResetting(false);
+      unblockPicking();
+      resetCurrentPickIndex();
+    },
+    []
+  );
 
   useEffect(() => {
     if (isPickedSequenceResetting) {

@@ -1,10 +1,10 @@
 import { type FC } from 'react';
+import { GameContext } from './GameContext/context';
+import { GameStage } from './GameContext/types';
+import { useGameContext } from './GameContext/useGameContext';
 import MemorizationPanel from './MemorizationPanel/MemorizationPanel';
 import PickingPanel from './PickingPanel/PickingPanel';
-import { GameContext } from './GameContext/context';
-import { useGameContext } from './GameContext/useGameContext';
 
-import { GameStage } from './GameContext/types';
 import './Game.css';
 
 const GAME_MAX_LEVEL = 5;
@@ -24,14 +24,14 @@ const Game: FC = () => {
 
   return (
     <GameContext.Provider value={gameStageContext}>
-      <div className="game">
+      <div className="square-fragments-memorization-game">
         {gameStatus.level <= GAME_MAX_LEVEL ? (
           <>
             <MemorizationPanel />
             <PickingPanel />
           </>
         ) : (
-          <div style={{ fontSize: '2rem' }}>Мини Игра Пройдена!</div>
+          <div>Игра пройдена!</div>
         )}
       </div>
     </GameContext.Provider>

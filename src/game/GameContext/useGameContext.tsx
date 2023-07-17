@@ -8,7 +8,9 @@ const initGameStatus = {
 };
 
 export function useGameContext() {
-  const [gameStatus, setGameStatus] = useState<GameStatus>({ ...initGameStatus });
+  const [gameStatus, setGameStatus] = useState<GameStatus>({
+    ...initGameStatus,
+  });
   const gameStatusRef = useRef(gameStatus);
   gameStatusRef.current = gameStatus;
 

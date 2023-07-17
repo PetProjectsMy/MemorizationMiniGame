@@ -3,11 +3,11 @@ body {
   padding: 0;
 }
 
-.game {
-  --max-width: clamp(400px, 80vw, 1200px);
-  --max-height: clamp(300px, 80vw, 800px);
+.square-fragments-memorization-game {
+  --max-width: clamp(400px, 80vw, 800px);
+  --max-height: clamp(300px, 80vw, 600px);
 
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -22,14 +22,10 @@ body {
   font-size: 1rem;
 
   background-color: gray;
-
-  @media (orientation: portrait) {
-    flex-direction: column;
-  }
 }
 
-.game__puzzle-panel {
-  --puzzle-panel-size: calc(0.45 * min(var(--max-height), var(--max-width)));
+.square-fragments-memorization-game__puzzle-panel {
+  --puzzle-panel-size: calc(0.6 * min(var(--max-height), var(--max-width)));
   --interactive-panel-size: calc(0.85 * var(--puzzle-panel-size));
   --interactive-panel-border-width: calc(0.01 * var(--interactive-panel-size));
 
@@ -45,4 +41,5 @@ body {
   font-size: 2em;
 
   background-color: brown;
+  border-radius: 12px;
 }

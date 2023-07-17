@@ -1,4 +1,4 @@
-.game__progressbar {
+.square-fragments-memorization-game__progressbar {
   --indicator-size: calc(0.07 * var(--puzzle-panel-size));
 
   display: flex;
@@ -7,22 +7,24 @@
 
   width: 90%;
   height: 12%;
+  padding-bottom: 3%;
 }
 
-.game__progressbar-indicator {
+.square-fragments-memorization-game__progressbar-indicator {
   width: var(--indicator-size);
   height: var(--indicator-size);
   border-radius: 50%;
+  border: 3px solid rgb(211, 211, 211);
 }
 
-.game__progressbar-indicator_success {
-  background-color: green;
+.square-fragments-memorization-game__progressbar-indicator_success {
+  background-color: rgb(15, 192, 12);
 }
 
-.game__progressbar-indicator_error {
-  background-color: red;
+.square-fragments-memorization-game__progressbar-indicator_error {
+  background-color: rgb(226, 20, 20);
 }
 
-.game__progressbar-indicator_neutral {
-  background-color: grey;
+.square-fragments-memorization-game__progressbar-indicator_neutral {
+  background-color: rgb(98, 98, 98);
 }
